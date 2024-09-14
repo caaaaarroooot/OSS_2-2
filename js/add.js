@@ -1,22 +1,24 @@
 const nameInput = document.getElementById("name");
-// const usernameInput = document.getElementById("username");
-// const addressInput = document.getElementById("address1");
-// const countrySelect = document.getElementById("country-select");
-// const stateSelect = document.getElementById("state-select");
-// const birthdaySelect = document.getElementById("birthDay");
-// const emailInput = document.getElementById("email");
-// const address2Input = document.getElementById("address2");
-const mybutton = document.getElementById("btn");
+const birthYearInput = document.getElementById("birthyear");
+const countryInput = document.getElementById("country");
+const positionInput = document.getElementById("position");
+const clubInput = document.getElementById("club");
+const mainFootInput = document.getElementById("mainfoot");
+const myButton = document.getElementById("btn");
 
 const errorMessageName = document.getElementById("error-message-name");
-// const errorMessageUsername = document.getElementById("error-message-username");
-// const errorMessageAddress = document.getElementById("error-message-address1");
-// const errorMessageCountry = document.getElementById("error-message-country");
-// const errorMessageState = document.getElementById("error-message-state");
+const errorMessageBirthYear = document.getElementById(
+    "error-message-birthyear"
+);
+const errorMessageCountry = document.getElementById("error-message-country");
+const errorMessagePosition = document.getElementById("error-message-position");
+const errorMessageClub = document.getElementById("error-message-club");
+const errorMessageMainFoot = document.getElementById("error-message-mainfoot");
 
-function validateField(input, errorMessage) {
+// 공통 유효성 검사 함수
+function validateField(input, errorMessage, customValidation = null) {
     const value = input.value.trim();
-    if (!value) {
+    if (!value || (customValidation && !customValidation(value))) {
         input.classList.add("error");
         input.classList.remove("success");
         errorMessage.classList.add("active");
@@ -29,57 +31,84 @@ function validateField(input, errorMessage) {
     }
 }
 
+// Birth Year에 대한 커스텀 유효성 검사 함수
+function validateBirthYear(value) {
+    const year = parseInt(value, 10);
+    return !isNaN(year) && year > 0 && year < 2024;
+}
+
+// Country에 대한 커스텀 유효성 검사 함수
+function validateCountry(value) {
+    return value.length >= 2;
+}
+
+// Position에 대한 커스텀 유효성 검사 함수
+function validatePosition(value) {
+    const validPositions = ["GK", "DF", "MF", "FW"];
+    return validPositions.includes(value.toUpperCase());
+}
+
+// 전체 폼 유효성 검사
 function isValid() {
     let isValid = true;
 
-    isValid = validateField(nameInput, errorMessageName);
-    // isValid = validateField(usernameInput, errorMessageUsername) && isValid;
-    // isValid = validateField(addressInput, errorMessageAddress) && isValid;
-    // isValid = validateField(countrySelect, errorMessageCountry) && isValid;
-    // isValid = validateField(stateSelect, errorMessageState) && isValid;
+    isValid = validateField(nameInput, errorMessageName) && isValid;
+    isValid =
+        validateField(
+            birthYearInput,
+            errorMessageBirthYear,
+            validateBirthYear
+        ) && isValid;
+    isValid =
+        validateField(countryInput, errorMessageCountry, validateCountry) &&
+        isValid;
+    isValid =
+        validateField(positionInput, errorMessagePosition, validatePosition) &&
+        isValid;
+    isValid = validateField(clubInput, errorMessageClub) && isValid;
+    isValid = validateField(mainFootInput, errorMessageMainFoot) && isValid;
+
     return isValid;
 }
 
+// 폼 제출 처리
 function handleSubmit() {
-    // birthdaySelect.classList.add("success");
-    // address2Input.classList.add("success");
-    // emailInput.classList.add("success");
     if (isValid()) {
         document.form1.submit();
-        alert("submit success");
+        alert("게시물이 추가됩니다");
     }
 }
 
+// 마우스 hover 이벤트 처리
 function mouseon() {
-    mybutton.classList.add("mouseOn");
+    myButton.classList.add("mouseOn");
 }
 
 function mouseout() {
-    mybutton.classList.remove("mouseOn");
+    myButton.classList.remove("mouseOn");
 }
 
-// function keyDown(event) {
-//     console.log(event.key);
-// }
-
-// nameInput.addEventListener("keydown", keyDown);
-
+// 실시간 입력 유효성 검사
 nameInput.addEventListener("input", () => {
     validateField(nameInput, errorMessageName);
 });
 
-// usernameInput.addEventListener("input", () => {
-//     validateField(usernameInput, errorMessageUsername);
-// });
+birthYearInput.addEventListener("input", () => {
+    validateField(birthYearInput, errorMessageBirthYear, validateBirthYear);
+});
 
-// addressInput.addEventListener("input", () => {
-//     validateField(addressInput, errorMessageAddress);
-// });
+countryInput.addEventListener("input", () => {
+    validateField(countryInput, errorMessageCountry, validateCountry);
+});
 
-// countrySelect.addEventListener("change", () => {
-//     validateField(countrySelect, errorMessageCountry);
-// });
+positionInput.addEventListener("input", () => {
+    validateField(positionInput, errorMessagePosition, validatePosition);
+});
 
-// stateSelect.addEventListener("change", () => {
-//     validateField(stateSelect, errorMessageState);
-// });
+clubInput.addEventListener("input", () => {
+    validateField(clubInput, errorMessageClub);
+});
+
+mainFootInput.addEventListener("input", () => {
+    validateField(mainFootInput, errorMessageMainFoot);
+});
