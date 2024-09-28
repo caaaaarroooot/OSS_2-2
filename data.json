@@ -1,0 +1,41 @@
+{
+  "students": [
+    {
+      "name": "json",
+      "age": "24",
+      "id": "2"
+    },
+    {
+      "name": "jiyun",
+      "age": "25",
+      "id": "3"
+    },
+    {
+      "name": "수아 ",
+      "age": "24",
+      "id": "e321"
+    },
+    {
+      "id": "f2c4",
+      "name": "시우",
+      "age": "24"
+    },
+    {
+      "name": "junsu",
+      "age": "23",
+      "id": "aad4"
+    }
+  ],
+  "courses": [
+    {
+      "id": "1",
+      "cname": "Open source studio",
+      "credit": 3
+    },
+    {
+      "id": "2",
+      "cname": "Programming studio",
+      "credit": 2
+    }
+  ]
+}

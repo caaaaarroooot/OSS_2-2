@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ajax</title>
+        <script>
+            window.onload = function () {
+                let btnStu = document.getElementById("btnStu");
+                let btnAdd = document.getElementById("btnAdd");
+
+                btnStu.addEventListener("click", getStudents);
+                btnAdd.addEventListener("click", postData);
+            };
+
+            function getStudents() {
+                let contents = document.getElementById("contents");
+                const xhr = new XMLHttpRequest();
+
+                xhr.open("GET", "http://localhost:3001/students");
+                xhr.setRequestHeader("content-type", "application/json");
+                xhr.send();
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const res = JSON.parse(xhr.response);
+                        console.log(res);
+                        contents.innerHTML = makeList(res);
+                    } else {
+                        console.log(xhr.status, xhr.statusText);
+                    }
+                };
+            }
+
+            function makeList(data) {
+                let str = "<ul>";
+                data.forEach((student) => {
+                    str +=
+                        "<li>" +
+                        student.name +
+                        " (" +
+                        student.age +
+                        ")" +
+                        `<button type="button" onclick="updateData('${student.id}')">Update</button>` +
+                        `<button type="button" onclick="deleteData('${student.id}')">Delete</button>` +
+                        "</li>";
+                });
+                str += "</ul>";
+                return str;
+            }
+
+            function postData() {
+                let name = document.getElementById("name");
+                let age = document.getElementById("age");
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "http://localhost:3001/students");
+                xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
+                const data = { name: name.value, age: age.value };
+
+                xhr.send(JSON.stringify(data));
+                xhr.onload = () => {
+                    if (xhr.status === 201) {
+                        name.value = "";
+                        age.value = "";
+                        getStudents();
+                    } else {
+                        console.log(xhr.status, xhr.statusText);
+                    }
+                };
+            }
+
+            function updateData(id, event) {
+                const xhr = new XMLHttpRequest();
+                xhr.open("PUT", "http://localhost:3001/students/" + id);
+                xhr.setRequestHeader("content-type", "application/json; charset=UTF-8");
+                const name = prompt("새로운 이름을 입력하세요:");
+                const age = prompt("새로운 나이를 입력하세요:");
+                const data = { name, age };
+
+                xhr.send(JSON.stringify(data));
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        getStudents();
+                    } else {
+                        console.log(xhr.status, xhr.statusText);
+                    }
+                };
+            }
+
+            function deleteData(id) {
+                const xhr = new XMLHttpRequest();
+                xhr.open("DELETE", "http://localhost:3001/students/" + id);
+                xhr.setRequestHeader("content-type", "application/json");
+                xhr.send();
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        getStudents();
+                    } else {
+                        console.log(xhr.status, xhr.statusText);
+                    }
+                };
+            }
+        </script>
+    </head>
+    <body>
+        <button id="btnStu" type="button">학생 데이터 가져오기</button>
+        <br />
+
+        <input type="text" id="name" name="name" placeholder="이름" required />
+        <input type="number" id="age" name="age" placeholder="나이" required />
+        <button id="btnAdd" type="button">학생 데이터 추가</button>
+
+        <div id="contents"></div>
+    </body>
+</html>
